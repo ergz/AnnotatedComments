@@ -2,16 +2,32 @@ import sublime
 import sublime_plugin
 
 import re
+import os
 
-comment_start = {'c': r'(//|/\*)'}
+_annotation_regex = {
+    '.c': r"(//|/\*) ?(TODO|NOTE) ?\(.+\)?.+", 
+    '.py': r"(#|\"\"\") ?(TODO|NOTE) ?\(.+\)?.+"
+}
 
 _tag_line_regex = r"(//|/\*) ?(TODO|NOTE) ?\(.+\)?.+"
 
+def _get_regex(f):
+    return _annotation_regex.get(os.path.splitext(f)[1])
+
 def _find_annotated_comments(view):
-    tags = [i for i in view.find_all(_tag_line_regex)]
+
+    if not view.file_name():
+        sublime.message_dialog("File must be saved to detemine comments!")
+
+    regex_for_file = _get_regex(view.file_name())
+
+    if not regex_for_file:
+        sublime.message_dialog("This file contains no tags!")
+
+    tags = [i for i in view.find_all(regex_for_file)]
 
     if not tags:
-        sublime.status_message("This file contains no tags!")
+        sublime.message_dialog("This file contains no tags!")
 
     return tags
 
