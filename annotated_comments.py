@@ -4,8 +4,7 @@ import sublime_plugin
 import re
 import os
 
-# TODO(emanuel) - it would be nice to be able to add custom "TODO" tags that the user
-#                 may want to add to the list 
+# TODO(emanuel) - it would be nice to be able to add custom "TODO" tags that the user may want to add to the list
 
 
 # TODO(emanuel) - need to improve this, I am not sure this is optimal
@@ -37,6 +36,7 @@ def parse_comment_annotation(s):
     result = re.search(r"(TODO|NOTE) ?\((.+)\) ?-? ?(.+)?", s)
     comment_desc = result.group(3) if result.group(3) else "no description provided!"
     return "{}({}): {}".format(result.group(1), result.group(2), comment_desc)
+    # return ["{}({})".format(result.group(1), result.group(2)), "{}".format(comment_desc)]
 
 class AnnotatedCommentsCommand(sublime_plugin.TextCommand):
     def run(self, edit, start=None, end=None):
@@ -55,7 +55,6 @@ class AnnotatedCommentsCommand(sublime_plugin.TextCommand):
     def prompt_tag(self):
         items = find_annotated_comments(self.view)
         display_items = [parse_comment_annotation(self.view.substr(j)) for j in items]
-
         def pick(idx):
             if idx != -1:
                 region_of_selected = items[idx]
