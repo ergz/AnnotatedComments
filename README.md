@@ -12,3 +12,6 @@ by a user name and optionally followed by a description. In code this looks like
 /* TODO(ergz) - it currently has too many things baked in */
 ```
 
+It's probably a good idea when annotating comments that you add a short description 
+along with the TODO, if you need more than what would fit the quick_panel please add 
+this in a new line.

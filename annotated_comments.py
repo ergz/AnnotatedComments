@@ -4,18 +4,23 @@ import sublime_plugin
 import re
 import os
 
-# TODO(emanuel) - it would be nice to be able to add custom "TODO" tags that the user may want to add to the list
+# TODO(bug) - status message shows when keybinding is pressed at quickpanel is open
+# it would be nice if instead it just closed itself sorta like what ctrl+P does
 
 
-# TODO(emanuel) - need to improve this, I am not sure this is optimal
+# TODO(feature) - add additional comment annotations
+# other potential annotations could be: SECTION, 
+
+
+# TODO(optimize)
 ANNOTATION_REGEX = {
-    '.c': r"(//|/\*) ?(TODO|NOTE) ?\(.+\)?.+", 
-    '.py': r"(#|\"\"\") ?(TODO|NOTE) ?\(.+\)?.+"
+    '.c': r"(//|/\*) ?(TODO|NOTE|SECTION) ?\(.+\)?.+", 
+    '.py': r"(#) ?(TODO|NOTE|SECTION) ?\(.+\)?.+"
 }
 
 
-
-# TODO(emanuel) - find a way to exit nicely when there are no annotations or file not saved
+# TODO(refactor) - find a way to exit nicely when there are no annotations or file not saved
+# I am not very good at python, and so would like exit this program ASAP when it makes sense to
 def find_annotated_comments(view):
 
     if not view.file_name():
@@ -26,15 +31,19 @@ def find_annotated_comments(view):
         if not regex_for_file:
             sublime.status_message("This file contains no tags!")
 
-        tags = [i for i in view.find_all(regex_for_file)]
+        tags = [i for i in view.find_all(regex_for_file, sublime.IGNORECASE)]
         if not tags:
             sublime.message_dialog("This file contains no tags!")
 
         return tags
 
 def parse_comment_annotation(s):
-    result = re.search(r"(TODO|NOTE) ?\((.+)\) ?-? ?(.+)?", s)
-    comment_desc = result.group(3) if result.group(3) else "no description provided!"
+    result = re.search(r"(TODO|NOTE|SECTION) ?\((.+)\) ?(-|:)? ?(.+)?", s)
+
+    if result.group(1) == "SECTION":
+        comment_desc = "-----------"
+    else:
+        comment_desc = result.group(4) if result.group(4) else "no description provided!"
     return "{}({}): {}".format(result.group(1), result.group(2), comment_desc)
     # return ["{}({})".format(result.group(1), result.group(2)), "{}".format(comment_desc)]
 
@@ -67,5 +76,3 @@ class AnnotatedCommentsCommand(sublime_plugin.TextCommand):
             sublime.MONOSPACE_FONT,
             0, 
             lambda idx: pick(idx))
-
-
