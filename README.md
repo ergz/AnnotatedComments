@@ -10,6 +10,7 @@ For now, an annotated comment is a comment that starts with one of the following
 // TODO(ergz) - make this work with more languages
 /* TODO(ergz) - it currently has too many things baked in */
 ```
+![annoted-comments-readme](https://user-images.githubusercontent.com/10622214/233309492-4a583eea-1175-4629-ba0c-2e49b3f6056f.gif)
 
 ## TODO
 
