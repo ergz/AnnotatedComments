@@ -12,10 +12,11 @@ import os
 # other potential annotations could be: SECTION, 
 
 
-# TODO(optimize)
+# TODO()
 ANNOTATION_REGEX = {
-    '.c': r"(//|/\*) ?(TODO|NOTE|SECTION) ?\(.+\)?.+", 
-    '.py': r"(#) ?(TODO|NOTE|SECTION) ?\(.+\)?.+"
+    '.c': r"(//|/\*) ?(TODO|NOTE|FIXME|SECTION) ?\(.+\)?.+", 
+    '.cpp': r"(//|/\*) ?(TODO|NOTE|FIXME|SECTION) ?\(.+\)?.+", 
+    '.py': r"(#) ?(TODO|NOTE|FIXME|SECTION) ?\(.+\)?.+"
 }
 
 
@@ -38,7 +39,7 @@ def find_annotated_comments(view):
         return tags
 
 def parse_comment_annotation(s):
-    result = re.search(r"(TODO|NOTE|SECTION) ?\((.+)\) ?(-|:)? ?(.+)?", s)
+    result = re.search(r"(TODO|NOTE|FIXME|SECTION) ?\((.+)\) ?(-|:)? ?(.+)?", s)
 
     if result.group(1) == "SECTION":
         comment_desc = "-----------"
